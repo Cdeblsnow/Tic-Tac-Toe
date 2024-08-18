@@ -1,31 +1,6 @@
 require "colorize"
 require "rubocop"
 
-class Game
-  attr_accessor :game_start, :new_game
-
-  def initialize
-    self.game_start = false
-    self.new_game = false
-  end
-
-  def game_init
-    self.game_start = true
-  end
-
-  def game_reset
-    self.game_start = false
-  end
-
-  def new_game_init
-    self.game_start = true
-  end
-
-  def new_game_reset
-    self.game_start = false
-  end
-end
-
 class Player
   attr_accessor :player_mark, :player_points, :number_of_moves, :name
 
@@ -36,15 +11,10 @@ class Player
     self.name = "Player#{@@player_id}"
     self.player_mark = (@@player_id == 1 ? "X" : "O")
     self.player_points = 0
-    self.number_of_moves = 0
   end
 
   def show_player_id
     @@player_id
-  end
-
-  def add_move
-    self.number_of_moves += 1
   end
 
   def add_point
@@ -136,7 +106,6 @@ class Board
 end
 
 board = Board.new
-game = Game.new
 player1 = Player.new
 player2 = Player.new
 winner = false
@@ -149,7 +118,9 @@ puts "#{firstp.name} goes first their mark is" + " #{firstp.player_mark}".colori
 puts "#{secondp.name} goes first their mark is" + " #{secondp.player_mark}".colorize(:blue)
 puts ""
 puts board.show_board
+
 until winner == true
+
   puts "#{firstp.name} make your move"
   move = gets.chomp
   board.transform_board(move)
@@ -158,13 +129,31 @@ until winner == true
     move = gets.chomp
     board.transform_board(move)
   end
+  board.show_transformed_board
 
   if board.horizontal_win? == true || board.vertical_win? == true ||
      board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
 
     firstp.add_point
     puts "#{firstp} congratulations for wining!"
-
+    winner = true
+    puts "Would you like to keep playing Y/N?"
+    answer = gets.chomp
+    if answer == "Y"
+      winner = false
+      playing_order = [player1, player2]
+      playing_order = playing_order.shuffle
+      firstp = playing_order[0]
+      secondp = playing_order[1]
+      board.reset_board
+      puts "#{firstp.name} goes first their mark is" + " #{firstp.player_mark}".colorize(:red)
+      puts "#{secondp.name} goes first their mark is" + " #{secondp.player_mark}".colorize(:blue)
+      puts ""
+      puts board.show_board
+    else
+      puts "Thanks for playing, the final scores are #{firstp.show_player_id}:#{firstp.scores} and #{secondp.show_player_id}:#{secondp.scores}"
+      break
+    end
   end
 
   puts "#{secondp.name} make your move"
@@ -175,10 +164,30 @@ until winner == true
     move = gets.chomp
     board.transform_board(move)
   end
-  secondp.add_move
+  board.show_transformed_board
 
-  if (firstp.number_of_moves >= 3 || secondp.number_of_moves >= 3) && board.horizontal_win? == (true)
+  next unless board.horizontal_win? == true || board.vertical_win? == true ||
+              board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
 
+  secondp.add_point
+  puts "#{secondp} congratulations for wining!"
+  winner = true
+  puts "Would you like to keep playing Y/N?"
+  answer = gets.chomp
+  if answer == "Y"
+    winner = false
+    playing_order = [player1, player2]
+    playing_order = playing_order.shuffle
+    firstp = playing_order[0]
+    secondp = playing_order[1]
+    board.reset_board
+    puts "#{firstp.name} goes first their mark is" + " #{firstp.player_mark}".colorize(:red)
+    puts "#{secondp.name} goes first their mark is" + " #{secondp.player_mark}".colorize(:blue)
+    puts ""
+    puts board.show_board
+  else
+    puts "Thanks for playing, the final scores are #{firstp.show_player_id}:#{firstp.scores} and #{secondp.show_player_id}:#{secondp.scores}"
+    break
   end
 
 end
