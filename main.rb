@@ -1,5 +1,4 @@
 require "colorize"
-require "rubocop"
 
 class Player
   attr_accessor :player_mark, :player_points, :number_of_moves, :name
