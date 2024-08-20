@@ -1,10 +1,9 @@
-require "colorize"
+
 require_relative "lib/board"
 require_relative "lib/player"
 require_relative "lib/game"
 
 board = Board.new
-board.reset_board
 Game.player_creation
 winner = false
 
@@ -12,7 +11,7 @@ winner = false
 puts "#{Game.player1.name} goes first their mark is" + " #{Game.player1.player_mark}"
 puts "#{Game.player2.name} goes first their mark is" + " #{Game.player2.player_mark}"
 puts ""
-puts board.show_board
+Board.show_board
 
 until winner == true
 
@@ -22,30 +21,17 @@ until winner == true
   board.transform_board(Game.player1.player_mark)
   board.show_transformed_board
 
-  if board.horizontal_win? == true || board.vertical_win? == true ||
-     board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
-
-    firstp.add_point
-    puts "#{firstp.name} congratulations for wining!"
+  if Game.p1_win?(board) == true
+    puts "#{Game.player1.name} congratulations for wining!"
     winner = true
     puts "Would you like to keep playing Y/N?"
-    answer = gets.chomp
-    if answer == "Y"
-      winner = false
-      playing_order = [player1, player2]
-      playing_order = playing_order.shuffle
-      firstp = playing_order[0]
-      secondp = playing_order[1]
-      board.reset_board
-      puts "#{firstp.name} goes first their mark is" + " #{firstp.player_mark}"
-      puts "#{secondp.name} goes first their mark is" + " #{secondp.player_mark}"
-      puts ""
-      puts board.show_board
-    else
-      puts "Thanks for playing, the final scores are #{firstp.name}:#{firstp.player_points} and #{secondp.name}:#{secondp.player_points}"
-      break
+    answer = gets.chomp.downcase
+    case answer
+    when "y" then Game.new_game && winner = false
+    when "n" then Game.reject_new_game && break 
     end
   end
+  
 
   puts "#{Game.player2.name} make your move"
   move = gets.chomp.to_i
@@ -53,27 +39,14 @@ until winner == true
   board.transform_board(Game.player2.player_mark)
   board.show_transformed_board
 
-  next unless board.horizontal_win? == true || board.vertical_win? == true ||
-              board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
-
-  secondp.add_point
-  puts "#{secondp.name} congratulations for wining!"
-  winner = true
-  puts "Would you like to keep playing Y/N?"
-  answer = gets.chomp
-  if answer == "Y"
-    winner = false
-    playing_order = [player1, player2]
-    playing_order = playing_order.shuffle
-    firstp = playing_order[0]
-    secondp = playing_order[1]
-    board.reset_board
-    puts "#{firstp.name} goes first their mark is" + " #{firstp.player_mark}"
-    puts "#{secondp.name} goes first their mark is" + " #{secondp.player_mark}"
-    puts ""
-    puts board.show_board
-  else
-    puts "Thanks for playing, the final scores are #{firstp.name}:#{firstp.player_points} and #{secondp.name}:#{secondp.player_points}"
-    break
+  if Game.p2_win?(board) == true
+    puts "#{Game.player2.name} congratulations for wining!"
+    winner = true
+    puts "Would you like to keep playing Y/N?"
+    answer = gets.chomp.downcase
+    case answer
+    when "y" then Game.new_game && winner = false
+    when "n" then Game.reject_new_game  
+    end
   end
 end
