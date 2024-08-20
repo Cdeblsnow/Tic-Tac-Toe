@@ -23,7 +23,7 @@ class Game
     @secondp
   end
 
-  def self.p1_win?
+  def self.p1_win?(board)
     if board.horizontal_win? == true || board.vertical_win? == true ||
       board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
  
@@ -33,7 +33,7 @@ class Game
     end
   end
 
-  def self.p2_win?
+  def self.p2_win?(board)
     if board.horizontal_win? == true || board.vertical_win? == true ||
       board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
  
@@ -48,7 +48,7 @@ class Game
        puts "#{Game.player1.name} goes first their mark is" + " #{Game.player1.player_mark}"
        puts "#{Game.player2.name} goes first their mark is" + " #{Game.player2.player_mark}"
        puts ""
-       puts Board.show_board
+       Board.show_board
   end
 
   def self.reject_new_game
