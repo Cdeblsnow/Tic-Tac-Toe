@@ -1,57 +1,72 @@
 require_relative "player"
 require_relative "board"
+
 class Game
-  def self.shuffle_players(p1, p2)
-    playing_order = [p1, p2]
-    playing_order = playing_order.shuffle
-    @firstp = playing_order[0]
-    @secondp = playing_order[1]
+  attr_reader :first_player, :second_player
+
+  def initialize(board)
+    @moves = []
+    @first_player = ""
+    @second_player = ""
+    @new_board = board
   end
 
-  def self.player_creation
+  def add_move(move)
+    @moves << move
+  end
+
+  def check_move(move)
+    @moves.include?(move)
+  end
+
+  def game_over(board)
+    p1_win?(board) || p2_win?(board)
+  end
+
+  def player_creation
     Player.id_reset
     player1 = Player.new
     player2 = Player.new
-    Game.shuffle_players(player1, player2)
+    shuffle_players(player1, player2)
   end
 
-  def self.player1
-    @firstp
+  def self.new_game
+    player_creation
+    puts "#{@first_player.name} goes first their mark is" + " #{@first_player.player_mark}"
+    puts "#{@second_player.name} goes first their mark is" + " #{@second_player.player_mark}"
+    puts ""
   end
 
-  def self.player2
-    @secondp
+  def reject_new_game
+    puts "Thanks for playing!, the final scores are #{@first_player.name}:#{@first_player.player_points} and #{@second_player.name}:#{@second_player.player_points}"
   end
 
-  def self.p1_win?(board)
+  private
+
+  def p1_win?(board)
     if board.horizontal_win? == true || board.vertical_win? == true ||
-      board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
- 
-     Game.player1.add_point
-     return true
-     
+       board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
+
+      @first_player.add_point
+      true
+
     end
   end
 
-  def self.p2_win?(board)
+  def p2_win?(board)
     if board.horizontal_win? == true || board.vertical_win? == true ||
-      board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
- 
-     Game.player2.add_point
-     return true
-     
+       board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
+
+      @second_player.add_point
+      true
+
     end
   end
 
-  def self.new_game 
-       Game.player_creation
-       puts "#{Game.player1.name} goes first their mark is" + " #{Game.player1.player_mark}"
-       puts "#{Game.player2.name} goes first their mark is" + " #{Game.player2.player_mark}"
-       puts ""
-       Board.show_board
-  end
-
-  def self.reject_new_game
-    puts "Thanks for playing!, the final scores are #{Game.player1.name}:#{Game.player1.player_points} and #{Game.player2.name}:#{Game.player2.player_points}"
+  def shuffle_players(p1, p2)
+    playing_order = [p1, p2]
+    playing_order = playing_order.shuffle
+    @first_player = playing_order[0]
+    @second_player = playing_order[1]
   end
 end
