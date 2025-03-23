@@ -1,5 +1,5 @@
 class Board
-  attr_accessor :posx, :posy, :new_board
+  attr_reader :new_board
 
   def initialize
     @posx = 0
@@ -21,7 +21,7 @@ class Board
 
         @posx = x
         @posy = y
-        return
+        return # rubocop:disable Lint/NonLocalExitFromIterator
       end
     end
   end
@@ -35,18 +35,12 @@ class Board
     y = @posy
     return "Space has already been taken" unless @new_board[x][y] != mark1 && @new_board[x][y] != mark2
 
-    @new_board[x][y] = if player_number == 1
+    @new_board[x][y] = if player_number.even?
                          mark1
                        else
                          mark2
                        end
-  end
-
-  def show_transformed_board
-    3.times do |y|
-      3.times { |x| print @new_board[x][y] } # 'vertical printing'
-      puts
-    end
+    show_transformed_board
   end
 
   def horizontal_win?
@@ -78,6 +72,15 @@ class Board
     2.times do |i|
       break unless @new_board[i][2 - i] == @new_board[1 + i][1 - i]
       return true if i == 1
+    end
+  end
+
+  private
+
+  def show_transformed_board
+    3.times do |y|
+      3.times { |x| print @new_board[x][y] } # 'vertical printing'
+      puts
     end
   end
 end
