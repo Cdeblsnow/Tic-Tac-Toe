@@ -1,52 +1,45 @@
-
 require_relative "lib/board"
 require_relative "lib/player"
 require_relative "lib/game"
 
 board = Board.new
-Game.player_creation
+game = Game.new
+game.player_creation
 winner = false
+players = [game.first_player, game.second_player]
+i = 0
 
-
-puts "#{Game.player1.name} goes first their mark is" + " #{Game.player1.player_mark}"
-puts "#{Game.player2.name} goes first their mark is" + " #{Game.player2.player_mark}"
-puts ""
-Board.show_board
+puts "#{game.first_player.name} goes first their mark is" + " #{game.first_player.player_mark}"
+puts "#{game.second_player.name} goes first their mark is" + " #{game.second_player.player_mark}"
+puts " "
+board.show_board
 
 until winner == true
 
-  puts "#{Game.player1.name} make your move"
+  current_player = players[i % players.length]
+
+  puts "#{current_player.name} make your move"
   move = gets.chomp.to_i
+  if game.check_move(move) == true
+    puts "Please make a valid move"
+    move = gets.chomp.to_i until game.check_move(move) == false
+  end
+  game.add_move(move)
   board.finding(move)
-  board.transform_board(Game.player1.player_mark)
+  board.transform_board(players[0].player_mark, players[1].player_mark, i)
   board.show_transformed_board
 
-  if Game.p1_win?(board) == true
-    puts "#{Game.player1.name} congratulations for wining!"
+  if game.game_over(board)
+    puts "#{current_player.name} congratulations for wining!"
     winner = true
     puts "Would you like to keep playing Y/N?"
     answer = gets.chomp.downcase
     case answer
-    when "y" then Game.new_game && winner = false
-    when "n" then Game.reject_new_game && break 
+    when "y" then game.new_game && winner = false
+    when "n" then game.reject_new_game && break
     end
   end
-  
 
-  puts "#{Game.player2.name} make your move"
-  move = gets.chomp.to_i
-  board.finding(move)
-  board.transform_board(Game.player2.player_mark)
-  board.show_transformed_board
+  i += 1
 
-  if Game.p2_win?(board) == true
-    puts "#{Game.player2.name} congratulations for wining!"
-    winner = true
-    puts "Would you like to keep playing Y/N?"
-    answer = gets.chomp.downcase
-    case answer
-    when "y" then Game.new_game && winner = false
-    when "n" then Game.reject_new_game  
-    end
-  end
 end
