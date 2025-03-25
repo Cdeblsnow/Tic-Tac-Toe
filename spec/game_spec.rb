@@ -10,12 +10,12 @@ describe Game do
       expect(game_init.instance_variable_get(:@moves).size).to eq(1)
     end
 
-    it "starts with an empty player one" do
-      expect(game_init.first_player).to be_empty
+    it "starts with a player one" do
+      expect(game_init.first_player).not_to be_nil
     end
 
-    it "starts with an empty player two" do
-      expect(game_init.second_player).to be_empty
+    it "starts with a player two" do
+      expect(game_init.second_player).not_to be_nil
     end
   end
 
