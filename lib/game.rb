@@ -4,34 +4,39 @@ require_relative "board"
 class Game
   attr_reader :first_player, :second_player
 
-  def initialize(board)
-    @moves = []
+  def initialize
+    @moves = [0]
     @first_player = ""
     @second_player = ""
-    @new_board = board
   end
 
   def add_move(move)
-    @moves << move
+    @moves << move if move.is_a? Numeric
   end
 
   def check_move(move)
     @moves.include?(move)
   end
 
-  def game_over(board)
-    p1_win?(board) || p2_win?(board)
+  def reset_moves
+    @moves = [0]
+  end
+
+  def game_over(board, i)
+    if i.even?
+      p1_win?(board)
+    else
+      p2_win?(board)
+    end
   end
 
   def player_creation
-    Player.id_reset
-    player1 = Player.new
-    player2 = Player.new
+    player1 = Player.new(1)
+    player2 = Player.new(2)
     shuffle_players(player1, player2)
   end
 
-  def self.new_game
-    player_creation
+  def new_game
     puts "#{@first_player.name} goes first their mark is" + " #{@first_player.player_mark}"
     puts "#{@second_player.name} goes first their mark is" + " #{@second_player.player_mark}"
     puts ""
@@ -45,22 +50,24 @@ class Game
 
   def p1_win?(board)
     if board.horizontal_win? == true || board.vertical_win? == true ||
-       board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
+       board.down_left_diagonal_win? == true || board.down_right_diagonal_win? == true
 
       @first_player.add_point
-      true
+      return true
 
     end
+    false
   end
 
   def p2_win?(board)
     if board.horizontal_win? == true || board.vertical_win? == true ||
-       board.down_left_diagonal_win? == true || board.down_right_diagonal_win?
+       board.down_left_diagonal_win? == true || board.down_right_diagonal_win? == true
 
       @second_player.add_point
-      true
+      return true
 
     end
+    false
   end
 
   def shuffle_players(p1, p2)
