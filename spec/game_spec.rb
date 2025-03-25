@@ -6,8 +6,8 @@ describe Game do
   describe "#initialize" do
     subject(:game_init) { described_class.new }
 
-    it "starts with an empty move set" do
-      expect(game_init.instance_variable_get(:@moves)).to be_empty
+    it "starts with an array with only one element" do
+      expect(game_init.instance_variable_get(:@moves).size).to eq(1)
     end
 
     it "starts with an empty player one" do
@@ -50,7 +50,7 @@ describe Game do
     end
   end
 
-  describe "#game_over" do
+  describe "#game_over" do # rubocop:disable Metrics/BlockLength
     subject(:game_end) { described_class.new }
     let(:board_end) { Board.new }
     let!(:first_player) { Player.new(1) }
