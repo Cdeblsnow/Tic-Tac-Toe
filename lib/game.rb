@@ -6,8 +6,9 @@ class Game
 
   def initialize
     @moves = [0]
-    @first_player = ""
-    @second_player = ""
+    @first_player = Player.new(1)
+    @second_player = Player.new(2)
+    shuffle_players(@first_player, @second_player)
   end
 
   def add_move(move)
@@ -28,12 +29,6 @@ class Game
     else
       p2_win?(board)
     end
-  end
-
-  def player_creation
-    player1 = Player.new(1)
-    player2 = Player.new(2)
-    shuffle_players(player1, player2)
   end
 
   def new_game
