@@ -1,6 +1,6 @@
 require "colorize"
 class Player
-  attr_reader :player_mark, :name
+  attr_reader :player_mark, :name, :player_points
 
   def initialize(id)
     @name = "Player#{id}"
