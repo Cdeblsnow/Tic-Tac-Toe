@@ -3,8 +3,8 @@ require "colorize"
 
 describe Player do # rubocop:disable Metrics/BlockLength
   before(:all) do
-    @player1 = described_class.new
-    @player2 = described_class.new
+    @player1 = described_class.new(1)
+    @player2 = described_class.new(2)
   end
 
   describe "#initialize" do
@@ -50,14 +50,6 @@ describe Player do # rubocop:disable Metrics/BlockLength
         @player2.add_point
         expect(@player2.player_points).to eq(1)
       end
-    end
-  end
-
-  describe ".id_reset" do
-    context "when the called"
-    let(:player) { described_class.new } # create first an instance of player to increase id count
-    it "reset player id" do
-      expect(Player.id_reset).to eq(0)
     end
   end
 end
