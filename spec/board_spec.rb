@@ -56,4 +56,44 @@ describe Board do
       expect(board_transform.new_board).to eq([[1, "X", 3], [4, 5, 6], [7, 8, 9]])
     end
   end
+
+  describe "#horizontal_win?" do
+    subject(:board_horizontal) { described_class.new }
+
+    it "returns true when three 'consecutive' horizontal tiles are the same" do
+      board_horizontal.instance_variable_set(:@new_board, [["X", 2, 3], ["X", 5, 6], ["X", 8, 9]])
+
+      expect(board_horizontal.horizontal_win?).to eq(true)
+    end
+  end
+
+  describe "#vertical_win?" do
+    subject(:board_vertical) { described_class.new }
+
+    it "returns true when three 'vertical' horizontal tiles are the same" do
+      board_vertical.instance_variable_set(:@new_board, [%w[Y Y Y], [4, 5, 6], [7, 8, 9]])
+
+      expect(board_vertical.vertical_win?).to eq(true)
+    end
+  end
+
+  describe "#down_right_diagonal_win?" do
+    subject(:board_diagonal) { described_class.new }
+
+    it "returns true when three diagonal, left to right, tiles are the same" do
+      board_diagonal.instance_variable_set(:@new_board, [["X", 2, 3], [4, "X", 6], [7, 8, "X"]])
+
+      expect(board_diagonal.down_right_diagonal_win?).to eq(true)
+    end
+  end
+
+  describe "#down_left_diagonal_win?" do
+    subject(:board_diagonal) { described_class.new }
+
+    it "returns true when three diagonal, right to left, tiles are the same" do
+      board_diagonal.instance_variable_set(:@new_board, [[1, 2, "X"], [4, "X", 6], ["X", 8, 9]])
+
+      expect(board_diagonal.down_left_diagonal_win?).to eq(true)
+    end
+  end
 end
